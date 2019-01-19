@@ -15,6 +15,6 @@
               (let [current-freq (+ num (:current-freq info))]
                 (if (contains? (:freq-seen info) current-freq)
                   (reduced current-freq)
-                  {:freq-seen (conj (:freq-seen info) current-freq) :current-freq current-freq}))) 
-            {:current-freq 0 :freq-seen #{}} 
+                  {:freq-seen (conj (:freq-seen info) current-freq) :current-freq current-freq})))
+            {:current-freq 0 :freq-seen #{}}
             (cycle nums))))
