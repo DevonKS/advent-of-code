@@ -49,10 +49,6 @@
                                []
                                claims)
         frequencies-of-claimed-points (frequencies claimed-points)]
-    (reduce (fn
-              [result claim]
-              (if (every? #(= 1 (get frequencies-of-claimed-points %)) (get-claim-points claim))
-                (reduced (:id claim))
-                ""))
-            ""
-            claims)))
+    (:id (first (filter
+                 (fn [claim] (every? #(= 1 (get frequencies-of-claimed-points %)) (get-claim-points claim)))
+                 claims)))))

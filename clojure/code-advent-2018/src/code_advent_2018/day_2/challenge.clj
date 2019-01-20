@@ -1,5 +1,5 @@
 (ns code-advent-2018.day-2.challenge
-    (:require [clojure.math.numeric-tower :refer [abs]]))
+  (:require [clojure.math.numeric-tower :refer [abs]]))
 
 (defn challenge1
   [filename]
@@ -19,27 +19,20 @@
 
 (defn test-string-for-likeness
   [s strings-to-check]
-  (reduce (fn
-            [result string-to-check]
-            (let [common-string (clojure.string/join "" (map #(if (= %1 %2) %1 "") s string-to-check))
-                  len-of-s (count s)
-                  len-of-common-string (count common-string)
-                  diff-in-lens (abs (- len-of-s len-of-common-string))]
-              (if (= diff-in-lens 1)
-                (reduced common-string)
-                "")))
-          ""
-          strings-to-check))
+  (first (filter
+          #(= 1 (abs (- (count s) (count %))))
+          (map
+           (fn
+             [string-to-check]
+             (clojure.string/join "" (map #(if (= %1 %2) %1 "") s string-to-check)))
+           strings-to-check))))
 
 (defn challenge2
   [filename]
   (let [file-string (slurp (str "src/code_advent_2018/day_2/" filename))
         box-ids (clojure.string/split-lines file-string)]
-    (reduce (fn
-              [result box-id]
-              (let [common-string (test-string-for-likeness box-id box-ids)]
-                (if (= common-string "")
-                  ""
-                  (reduced common-string))))
-            ""
-            box-ids)))
+    (first (filter
+            (comp not clojure.string/blank?)
+            (map
+             #(test-string-for-likeness % box-ids)
+             box-ids)))))
