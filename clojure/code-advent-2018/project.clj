@@ -5,6 +5,7 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/math.numeric-tower "0.0.4"]
+                 [clojure.java-time "0.3.2"]
                  [lein-cljfmt "0.6.4"]]
   :plugins [[lein-cljfmt "0.6.4"]]
   :main ^:skip-aot code-advent-2018.core
