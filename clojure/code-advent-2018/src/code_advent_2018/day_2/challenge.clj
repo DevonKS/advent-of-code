@@ -1,12 +1,14 @@
 (ns code-advent-2018.day-2.challenge
-  (:require [clojure.math.numeric-tower :refer [abs]]))
+  (:require [clojure.string :as s]))
+
+(defn parse-file
+  [filename]
+  (s/split-lines (slurp (str "src/code_advent_2018/day_2/" filename))))
 
 (defn challenge1
   [filename]
-  (let [file-string (slurp (str "src/code_advent_2018/day_2/" filename))
-        box-ids (clojure.string/split-lines file-string)
-        num-2s&3s (reduce (fn
-                            [info box-id]
+  (let [box-ids (parse-file filename)
+        num-2s&3s (reduce (fn [info box-id]
                             (let [char-frequencies (set (vals (frequencies box-id)))
                                   twos? (contains? char-frequencies 2)
                                   threes? (contains? char-frequencies 3)
@@ -19,20 +21,13 @@
 
 (defn test-string-for-likeness
   [s strings-to-check]
-  (first (filter
-          #(= 1 (abs (- (count s) (count %))))
-          (map
-           (fn
-             [string-to-check]
-             (clojure.string/join "" (map #(if (= %1 %2) %1 "") s string-to-check)))
-           strings-to-check))))
+  (first (filter #(= 1 (Math/abs (- (count s) (count %))))
+                 (map (fn [string-to-check]
+                        (s/join "" (map #(if (= %1 %2) %1 "") s string-to-check)))
+                      strings-to-check))))
 
 (defn challenge2
   [filename]
-  (let [file-string (slurp (str "src/code_advent_2018/day_2/" filename))
-        box-ids (clojure.string/split-lines file-string)]
-    (first (filter
-            (comp not clojure.string/blank?)
-            (map
-             #(test-string-for-likeness % box-ids)
-             box-ids)))))
+  (let [box-ids (parse-file filename)]
+    (first (filter (comp not clojure.string/blank?)
+                   (map #(test-string-for-likeness % box-ids) box-ids)))))

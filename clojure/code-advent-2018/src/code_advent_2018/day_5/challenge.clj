@@ -3,16 +3,16 @@
 
 (defn react-string
   [s]
-  (reduce (fn [result char]
-            (let [result-string (str result)
-                  s1 (str (last result-string))
-                  s1-lower (str/lower-case s1)
-                  s2 (str char)
-                  s2-lower (str/lower-case s2)]
-              (if (and (= s1-lower s2-lower) (not= s1 s2))
-                (subs result-string 0 (- (count result-string) 1))
-                (str result s2))))
-          s))
+  (apply str (reduce (fn [result char]
+                        (let [s1 (peek result)
+                              s1-lower (if (not (nil? s1)) (first (str/lower-case s1)))
+                              s2 char
+                              s2-lower (first (str/lower-case s2))]
+                            (if (and (= s1-lower s2-lower) (not= s1 s2))
+                              (pop result)
+                              (conj result s2))))
+                     []
+                     s)))
 
 (defn challenge1
   [filename]

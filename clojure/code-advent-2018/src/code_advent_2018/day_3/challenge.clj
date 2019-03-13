@@ -1,28 +1,27 @@
-(ns code-advent-2018.day-3.challenge)
+(ns code-advent-2018.day-3.challenge
+  (:require [clojure.string :as s]))
 
 (defn parse-claim
   [claim]
-  (let [claim-parts (clojure.string/split claim #" ")
-        id (clojure.string/replace (first claim-parts) #"#" "")
-        start-location-parts (clojure.string/split (nth claim-parts 2) #",")
-        start-x (Integer. (first start-location-parts))
-        start-y (Integer. (clojure.string/replace (second start-location-parts) #":" ""))
-        size-parts (clojure.string/split (nth claim-parts 3) #"x")
-        width (Integer. (first size-parts))
-        height (Integer. (second size-parts))]
-    {:id id :start-x start-x :start-y start-y :width width :height height}))
+  (let [[_ id start-x start-y width height] (re-find #"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)" claim)]
+    {:id id
+     :start-coordinates [(Integer/parseInt start-x) (Integer/parseInt start-y)]
+     :dimensions [(Integer/parseInt width) (Integer/parseInt height)]}))
+
+(defn parse-file
+  [filename]
+  (map parse-claim (s/split-lines (slurp (str "src/code_advent_2018/day_3/" filename)))))
 
 (defn get-claim-points
   [claim]
-  (let [start-x (:start-x claim)
-        start-y (:start-y claim)
-        x-points (range start-x (+ start-x (:width claim)))
-        y-points (range start-y (+ start-y (:height claim)))]
-    (reduce (fn
-              [result x-point]
-              (apply conj result
-                     (map (fn
-                            [y-point]
+  (let [[start-x start-y] (:start-coordinates claim)
+        [width height] (:dimensions claim)
+        x-points (range start-x (+ start-x width))
+        y-points (range start-y (+ start-y height))]
+    (reduce (fn [result x-point]
+              (apply conj
+                     result
+                     (map (fn [y-point]
                             (vector x-point y-point))
                           y-points)))
             []
@@ -30,8 +29,7 @@
 
 (defn challenge1
   [filename]
-  (let [file-string (slurp (str "src/code_advent_2018/day_3/" filename))
-        claims (map parse-claim (clojure.string/split-lines file-string))
+  (let [claims (parse-file filename)
         claimed-points (reduce (fn [points claim]
                                  (apply conj points (get-claim-points claim)))
                                []
@@ -42,13 +40,14 @@
 
 (defn challenge2
   [filename]
-  (let [file-string (slurp (str "src/code_advent_2018/day_3/" filename))
-        claims (map parse-claim (clojure.string/split-lines file-string))
+  (let [claims (parse-file filename)
         claimed-points (reduce (fn [points claim]
                                  (apply conj points (get-claim-points claim)))
                                []
                                claims)
         frequencies-of-claimed-points (frequencies claimed-points)]
-    (:id (first (filter
-                 (fn [claim] (every? #(= 1 (get frequencies-of-claimed-points %)) (get-claim-points claim)))
-                 claims)))))
+    (->> claims
+         (filter (fn [claim]
+                   (every? #(= 1 (get frequencies-of-claimed-points %)) (get-claim-points claim))))
+         first
+         :id)))
