@@ -7,6 +7,10 @@
     (is (= 4398 (challenge1 "input.txt")))
     (is (= 17 (challenge1 "test-input.txt")))))
 
+(deftest challenge1-parallel-test
+  (testing "Challenge 1 Parallel Test"
+    (is (= 4398 (challenge1-parallel "input.txt")))
+    (is (= 17 (challenge1-parallel "test-input.txt")))))
 
 (deftest challenge2-test
   (testing "Challenge 2 Test"
