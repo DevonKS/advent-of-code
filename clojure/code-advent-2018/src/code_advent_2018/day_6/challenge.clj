@@ -76,11 +76,11 @@
 (defn get-point-areas-parallel
   [points]
   (r/fold merge-point-areas
-          (fn [point-areas point] (get-point-area points point-areas point))
-          (get-graph-points (get-max-x points)
+          (fn ([] {}) ([point-areas point] (get-point-area points point-areas point)))
+          (into [] (get-graph-points (get-max-x points)
                             (get-min-x points)
                             (get-max-y points)
-                            (get-min-y points))))
+                            (get-min-y points)))))
 
 (defn infinite-area?
   [area max-x min-x max-y min-y]
