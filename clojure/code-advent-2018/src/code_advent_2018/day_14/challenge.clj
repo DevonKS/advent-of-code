@@ -6,24 +6,20 @@
 
 (defn get-next-recipes
   [recipes elves]
-  (let [next-recipes-num (apply + (map #(:current-val %) elves))
-        next-recipes (num->digits next-recipes-num)]
+  (let [next-recipes (num->digits (apply + (map #(get recipes %) elves)))]
     (apply conj recipes next-recipes)))
 
 (defn get-next-recipes2
   [recipes elves current-index]
-  (let [next-recipes-num (apply + (map #(:current-val %) elves))
-        next-recipes (num->digits next-recipes-num)
+  (let [next-recipes (num->digits (apply + (map #(get recipes %) elves)))
         all-next-recipes (-> recipes
                              (assoc (inc current-index) (first next-recipes))
                              (conj (when (second next-recipes) [(+ 2 current-index) (second next-recipes)])))]
-        [all-next-recipes next-recipes]))
+    [all-next-recipes next-recipes]))
 
 (defn get-next-elves
   [recipes elves]
-  (mapv #(let [next-index (mod (+ 1 (:current-val %) (:current-index %)) (count recipes))]
-           {:current-index next-index
-            :current-val (get recipes next-index)}) elves))
+  (mapv #(mod (+ 1 (get recipes %) %) (count recipes)) elves))
 
 (defn generate-recipes
   [recipes elves n]
@@ -39,29 +35,21 @@
 (defn challenge1
   [seed num-warmup-recipes]
   (let [recipes (num->digits (Integer/parseInt seed))
-        elve1 {:current-index 0 :current-val (get recipes 0)}
-        elve2 {:current-index 1 :current-val (get recipes 1)}
-        elves [elve1 elve2]
+        elves [0 1]
         num-recipes-to-gen (- (+ num-warmup-recipes 10) (count recipes))
         recipes (generate-recipes recipes elves num-recipes-to-gen)]
     (apply str (take 10 (drop num-warmup-recipes recipes)))))
 
 (defn challenge2
   [seed target-sequence]
-  (let [recipes (into {} (map-indexed #(vector %1 %2) (num->digits (Integer/parseInt seed))))
-        elve1 {:current-index 0 :current-val (get recipes 0)}
-        elve2 {:current-index 1 :current-val (get recipes 1)}
-        elves [elve1 elve2]
-        target-sequence-count (count target-sequence)]
-    (loop [recipes recipes
-           elves elves
+  (let [target-sequence-count (count target-sequence)]
+    (loop [recipes (into {} (map-indexed #(vector %1 %2) (num->digits (Integer/parseInt seed))))
+           elves [0 1]
            current-index 1]
       (let [[all-next-recipes next-recipes] (get-next-recipes2 recipes elves current-index)
-            max-possible-index (+ 2 current-index)
-            last-seq (mapv #(get all-next-recipes %) (range (- (inc max-possible-index) target-sequence-count) (inc max-possible-index)))
-            last-string (apply str last-seq)
-            second-to-last-seq (mapv #(get all-next-recipes %) (range (- max-possible-index target-sequence-count) max-possible-index))
-            second-to-last-string (apply str second-to-last-seq)]
-        (cond (= last-string target-sequence) (- (count all-next-recipes) target-sequence-count)
-              (= second-to-last-string target-sequence) (- (count all-next-recipes) target-sequence-count (dec (count next-recipes)))
-              :else (recur all-next-recipes (get-next-elves all-next-recipes elves) (+ current-index (count next-recipes))))))))
+            ranges (map #(let [end-index (+ current-index % 2)] (range (- end-index target-sequence-count) end-index)) (range 0 (count next-recipes)))
+            sequences (mapv (fn [range] (apply str (map #(get all-next-recipes %) range))) ranges)
+            matching-sequence-index (first (keep-indexed #(if (= %2 target-sequence) %1) sequences))]
+        (if (nil? matching-sequence-index)
+          (recur all-next-recipes (get-next-elves all-next-recipes elves) (+ current-index (count next-recipes)))
+          (- current-index (- target-sequence-count (inc matching-sequence-index) 1)))))))
