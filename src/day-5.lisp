@@ -1,5 +1,5 @@
 (defpackage advent-of-code-2019.day-5
-  (:use :cl))
+  (:use :cl :cl-arrows))
 (in-package :advent-of-code-2019.day-5)
 
 
@@ -9,28 +9,39 @@
     (1 (fset:@ intcode index))))
 
 
-(defun basic-op (opcode intcode current-pos fn)
-  (let* ((val1-param-mode (digit-char-p (aref opcode 2)))
+(defun basic-op (op-request fn)
+  (let* ((opcode (fset:@ op-request :opcode))
+         (current-pos (fset:@ op-request :current-pos))
+         (intcode (fset:@ op-request :intcode))
+         (val1-param-mode (digit-char-p (aref opcode 2)))
          (val2-param-mode (digit-char-p (aref opcode 1)))
          (val1 (get-param-value val1-param-mode intcode current-pos))
          (val2 (get-param-value val2-param-mode intcode (+ 1 current-pos)))
          (dest (fset:@ intcode (+ 2 current-pos))))
-    (list (fset:with intcode dest (funcall fn val1 val2)) (+ 3 current-pos))))
+    (-> op-request
+        (fset:with :intcode (fset:with intcode dest (funcall fn val1 val2)))
+        (fset:with :current-pos (+ 3 current-pos)))))
 
 
-(defun basic-jump-op (opcode intcode current-pos pred-fn)
-  (let* ((val-1-param-mode (digit-char-p (aref opcode 2)))
+(defun basic-jump-op (op-request pred-fn)
+  (let* ((opcode (fset:@ op-request :opcode))
+         (current-pos (fset:@ op-request :current-pos))
+         (intcode (fset:@ op-request :intcode))
+         (val-1-param-mode (digit-char-p (aref opcode 2)))
          (val-2-param-mode (digit-char-p (aref opcode 1)))
          (val1 (get-param-value val-1-param-mode intcode current-pos))
          (val2 (get-param-value val-2-param-mode intcode (+ 1 current-pos)))
          (new-pos (if (funcall pred-fn val1)
                       val2
                       (+ 2 current-pos))))
-    (list intcode new-pos)))
+    (fset:with op-request :current-pos new-pos)))
 
 
-(defun basic-comparison-op (opcode intcode current-pos comparison-fn)
-  (let* ((val-1-param-mode (digit-char-p (aref opcode 2)))
+(defun basic-comparison-op (op-request comparison-fn)
+  (let* ((opcode (fset:@ op-request :opcode))
+         (intcode (fset:@ op-request :intcode))
+         (current-pos (fset:@ op-request :current-pos))
+         (val-1-param-mode (digit-char-p (aref opcode 2)))
          (val-2-param-mode (digit-char-p (aref opcode 1)))
          (val1 (get-param-value val-1-param-mode intcode current-pos))
          (val2 (get-param-value val-2-param-mode intcode (+ 1 current-pos)))
@@ -38,53 +49,72 @@
          (write-val (if (funcall comparison-fn val1 val2)
                         1
                         0)))
-    (list (fset:with intcode dest write-val) (+ 3 current-pos))))
+    (-> op-request
+        (fset:with :intcode (fset:with intcode dest write-val))
+        (fset:with :current-pos (+ 3 current-pos)))))
 
 
-(defun op-1 (opcode intcode current-pos)
-  (basic-op opcode intcode current-pos #'+))
+(defun read-single-digit-from-input ()
+  (loop for input = (progn
+                       (print "Please enter a single digit:")
+                       (read-line))
+     until (and (= 1 (length input))
+                (digit-char-p (aref input 0)))
+    finally (return (digit-char-p (aref input 0)))))
 
 
-(defun op-2 (opcode intcode current-pos)
-  (basic-op opcode intcode current-pos #'*))
+(defun op-1 (op-request)
+  (basic-op op-request #'+))
 
 
-(defun op-3 (opcode intcode current-pos)
-  (let ((input (loop for input = (progn
-                                   (print "Please enter a single digit:")
-                                   (read-line))
-                  until (and (= 1 (length input))
-                             (digit-char-p (aref input 0)))
-                  finally (return (digit-char-p (aref input 0)))))
-        (dest (fset:@ intcode current-pos)))
-    (list (fset:with intcode dest input) (+ 1 current-pos))))
+(defun op-2 (op-request)
+  (basic-op op-request #'*))
 
 
-(defun op-4 (opcode intcode current-pos)
-  (let* ((val-1-param-mode (digit-char-p (aref opcode 2)))
+(defun op-3 (op-request)
+  (let* ((inputs (fset:@ op-request :inputs))
+         (input (if inputs
+                    (first inputs)
+                    (read-single-digit-from-input)))
+         (intcode (fset:@ op-request :intcode))
+         (current-pos (fset:@ op-request :current-pos))
+         (dest (fset:@ intcode current-pos)))
+    (-> op-request
+        (fset:with :intcode (fset:with intcode dest input))
+        (fset:with :current-pos (+ 1 current-pos))
+        (fset:with :inputs (rest inputs)))))
+
+
+(defun op-4 (op-request)
+  (let* ((intcode (fset:@ op-request :intcode))
+         (current-pos (fset:@ op-request :current-pos))
+         (opcode (fset:@ op-request :opcode))
+         (val-1-param-mode (digit-char-p (aref opcode 2)))
          (value (get-param-value val-1-param-mode intcode current-pos)))
     (print value)
-    (list intcode (+ 1 current-pos))))
+    (-> op-request
+        (fset:with :current-pos (+ 1 current-pos))
+        (fset:with :output value))))
 
 
-(defun op-5 (opcode intcode current-pos)
-  (basic-jump-op opcode intcode current-pos (lambda (val) (/= 0 val))))
+(defun op-5 (op-request)
+  (basic-jump-op op-request (lambda (val) (/= 0 val))))
 
 
-(defun op-6 (opcode intcode current-pos)
-  (basic-jump-op opcode intcode current-pos (lambda (val) (= 0 val))))
+(defun op-6 (op-request)
+  (basic-jump-op op-request (lambda (val) (= 0 val))))
 
 
-(defun op-7 (opcode intcode current-pos)
-  (basic-comparison-op opcode intcode current-pos (lambda (val1 val2) (< val1 val2))))
+(defun op-7 (op-request)
+  (basic-comparison-op op-request (lambda (val1 val2) (< val1 val2))))
 
 
-(defun op-8 (opcode intcode current-pos)
-  (basic-comparison-op opcode intcode current-pos (lambda (val1 val2) (= val1 val2))))
+(defun op-8 (op-request)
+  (basic-comparison-op op-request (lambda (val1 val2) (= val1 val2))))
 
 
-(defun no-op (opcode intcode current-pos)
-  (list intcode current-pos))
+(defun no-op (op-request)
+  op-request)
 
 
 (defparameter *op-funcs* (fset:map (1 #'op-1)
@@ -98,21 +128,23 @@
                                    (99 #'no-op)))
 
 
-(defun dispatch-op (intcode current-pos)
-  (let* ((opcode (format nil "~5,'0D" (fset:@ intcode current-pos)))
+(defun dispatch-op (op-request)
+  (let* ((current-pos (fset:@ op-request :current-pos))
+         (opcode (format nil "~5,'0D" (fset:@ (fset:@ op-request :intcode) current-pos)))
          (op (parse-integer (subseq opcode (- (length opcode) 2))))
          (op-func (fset:@ *op-funcs* op))
-         (result (funcall op-func opcode intcode (+ 1 current-pos))))
-    (cons op result)))
+         (op-request* (-> op-request
+                          (fset:with :opcode opcode)
+                          (fset:with :op op)
+                          (fset:with :current-pos (+ 1 current-pos))))
+         (result (funcall op-func op-request*)))
+    result))
         
 
-(defun run-intcode (intcode)
-  (loop for (op intcode* current-pos) = (dispatch-op intcode 0) then (dispatch-op intcode* current-pos)
-       for final-result = nil then (if (= op 4)
-                                       (fset:@ intcode* (fset:@ intcode* (- current-pos 1))) ;; FIXME this only works if the param is in position mode.
-                                       final-result)
-       until (= op 99)
-       finally (return final-result)))
+(defun run-intcode (intcode inputs)
+  (loop for op-result = (dispatch-op (fset:map  (:intcode  intcode) (:current-pos 0) (:inputs inputs))) then (dispatch-op op-result)
+     until (= (fset:@ op-result :op) 99)
+     finally (return (fset:@ op-result :output))))
 
 
 (defun read-intcode (filename)
@@ -123,9 +155,9 @@
        (uiop:split-string (uiop:read-file-string filename) :separator ","))))
 
 
-(defun challenge-1 (filename)
-  (run-intcode (read-intcode filename)))
+(defun challenge-1 (filename inputs)
+  (run-intcode (read-intcode filename) inputs))
 
 
-(defun challenge-2 (filename)
-  (run-intcode (read-intcode filename)))
+(defun challenge-2 (filename inputs)
+  (run-intcode (read-intcode filename) inputs))
