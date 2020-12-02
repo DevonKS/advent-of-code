@@ -34,3 +34,12 @@
 (defn map-by
   [key-fn coll]
   (mapping key-fn identity coll))
+
+(defn boolean->bit
+  [b]
+  (if b 2r1 2r0))
+
+(defn xor
+  "This is a terrible way to implement xor but it's interesting and it works."
+  [x y]
+  (= 1 (bit-xor (boolean->bit x) (boolean->bit y))))

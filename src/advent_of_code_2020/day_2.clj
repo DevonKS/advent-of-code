@@ -28,7 +28,7 @@
                                  (partial nth password)
                                  dec)
                            [lower upper])]
-    (if char1 (not char2) char2)))
+    (util/xor char1 char2)))
 
 (defn count-valid
   [pred passwords]
