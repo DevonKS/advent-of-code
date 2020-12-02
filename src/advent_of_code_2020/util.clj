@@ -1,18 +1,17 @@
 (ns advent-of-code-2020.util
-  (:require [clojure.java.io :as io]
-            [clojure.string :as string]))
+  (:require [clojure.java.io :as io]))
 
 (defn challenge-filename
   [day part]
   (format "day%02d-part%02d.txt" day part))
 
-(defn read-challenge-file
+(defn read-challenge-file!
   [day part]
   (some-> (challenge-filename day part)
           io/resource
           slurp))
 
-(defn challenge-file-lines
+(defn challenge-file-lines!
   "Returns a lazy sequence of the challenge file lines."
   [day part]
   (some-> (challenge-filename day part)

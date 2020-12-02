@@ -2,6 +2,10 @@
   (:require [advent-of-code-2020.util :as util]
             [clojure.math.combinatorics :as combo]))
 
+(defn parse-input!
+  []
+  (map #(Integer/parseInt %) (util/challenge-file-lines! 1 1)))
+
 (defn challenge-1
   [nums]
   (let [combinations (combo/combinations nums 2)
@@ -10,8 +14,7 @@
 
 (defn challenge-1!
   []
-  (let [nums (map #(Integer/parseInt %) (util/challenge-file-lines 1 1))]
-    (challenge-1 nums)))
+  (challenge-1 (parse-input!)))
 
 (defn challenge-2
   [nums]
@@ -21,5 +24,4 @@
 
 (defn challenge-2!
   []
-  (let [nums (map #(Integer/parseInt %) (util/challenge-file-lines 1 1))]
-    (challenge-2 nums)))
+  (challenge-2 (parse-input!)))
