@@ -9,7 +9,7 @@
 (defn challenge-1
   [nums]
   (let [combinations (combo/combinations nums 2)
-        significant-pair (first (filter #(= 2020 (apply + %)) combinations))]
+        significant-pair (util/first-match #(= 2020 (apply + %)) combinations)]
     (apply * significant-pair)))
 
 (defn challenge-1!
@@ -19,7 +19,7 @@
 (defn challenge-2
   [nums]
   (let [combinations (combo/combinations nums 3)
-        significant-pair (first (filter #(= 2020 (apply + %)) combinations))]
+        significant-pair (util/first-match #(= 2020 (apply + %)) combinations)]
     (apply * significant-pair)))
 
 (defn challenge-2!

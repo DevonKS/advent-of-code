@@ -44,6 +44,10 @@
   [x y]
   (= 1 (bit-xor (boolean->bit x) (boolean->bit y))))
 
+(defn first-match
+  [pred coll]
+  (first (filter pred coll)))
+
 (defn count-if
   [pred coll]
   (count (filter pred coll)))

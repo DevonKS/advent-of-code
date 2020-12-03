@@ -19,7 +19,7 @@
 
 (defn is-password-valid-to-sled-rental-spec?
   [{:keys [lower upper character password]}]
-  (let [num-chars (count (filter #(= character %) password))]
+  (let [num-chars (util/count-if #(= character %) password)]
     (<= lower num-chars upper)))
 
 (defn is-password-valid-to-toboggon-co-spec?
@@ -32,7 +32,7 @@
 
 (defn count-valid
   [pred passwords]
-  (count (filter pred passwords)))
+  (util/count-if pred passwords))
 
 (defn challenge-1
   [passwords]
