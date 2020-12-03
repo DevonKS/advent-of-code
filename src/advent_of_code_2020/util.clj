@@ -43,3 +43,7 @@
   "This is a terrible way to implement xor but it's interesting and it works."
   [x y]
   (= 1 (bit-xor (boolean->bit x) (boolean->bit y))))
+
+(defn count-if
+  [pred coll]
+  (count (filter pred coll)))
