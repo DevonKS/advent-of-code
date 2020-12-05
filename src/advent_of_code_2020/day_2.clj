@@ -4,8 +4,8 @@
 (defn parse-line
   [line]
   (let [matches (re-matches #"(\d{1,2})-(\d{1,2}) (\w): (\w+)" line)
-        lower (Integer/parseInt (nth matches 1))
-        upper (Integer/parseInt (nth matches 2))
+        lower (util/parse-int (nth matches 1))
+        upper (util/parse-int (nth matches 2))
         character (first (nth matches 3))
         password (nth matches 4)]
     {:lower lower
