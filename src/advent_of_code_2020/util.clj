@@ -51,3 +51,8 @@
 (defn count-if
   [pred coll]
   (count (filter pred coll)))
+
+(defn parse-int
+  [x]
+  (try (Integer/parseInt x)
+       (catch Exception _ nil)))
