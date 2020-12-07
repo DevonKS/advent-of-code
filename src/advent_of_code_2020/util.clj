@@ -2,19 +2,19 @@
   (:require [clojure.java.io :as io]))
 
 (defn challenge-filename
-  [day part]
-  (format "day%02d-part%02d.txt" day part))
+  [day]
+  (format "day%02d.txt" day))
 
 (defn read-challenge-file!
-  [day part]
-  (some-> (challenge-filename day part)
+  [day]
+  (some-> (challenge-filename day)
           io/resource
           slurp))
 
 (defn challenge-file-lines!
   "Returns a lazy sequence of the challenge file lines."
-  [day part]
-  (some-> (challenge-filename day part)
+  [day]
+  (some-> (challenge-filename day)
           io/resource
           io/reader
           line-seq))

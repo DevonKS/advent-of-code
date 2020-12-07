@@ -21,7 +21,7 @@
 
 (defn parse-input!
   []
-  (parse-input (util/read-challenge-file! 4 1)))
+  (parse-input (util/read-challenge-file! 4)))
 
 (defn birth-year-valid?
   [passport]

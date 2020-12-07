@@ -13,7 +13,7 @@
 
 (defn parse-input!
   []
-  (parse-lines (util/challenge-file-lines! 3 1)))
+  (parse-lines (util/challenge-file-lines! 3)))
 
 (defn get-in-grid
   [grid max-x [x y]]

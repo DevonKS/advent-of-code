@@ -37,7 +37,7 @@
 
 (defn parse-input!
   []
-  (parse-input (util/challenge-file-lines! 5 1)))
+  (parse-input (util/challenge-file-lines! 5)))
 
 (defn challenge-1
   [seats]

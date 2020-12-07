@@ -4,7 +4,7 @@
 
 (defn parse-input!
   []
-  (map util/parse-int (util/challenge-file-lines! 1 1)))
+  (map util/parse-int (util/challenge-file-lines! 1)))
 
 (defn challenge-1
   [nums]

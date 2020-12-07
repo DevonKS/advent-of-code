@@ -17,7 +17,7 @@
 
 (defn parse-input!
   []
-  (parse-input (util/read-challenge-file! 6 1)))
+  (parse-input (util/read-challenge-file! 6)))
 
 (defn challenge-1
   [groups]

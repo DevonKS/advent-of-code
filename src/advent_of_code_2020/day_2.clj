@@ -15,7 +15,7 @@
 
 (defn parse-input!
   []
-  (map parse-line (util/challenge-file-lines! 2 1)))
+  (map parse-line (util/challenge-file-lines! 2)))
 
 (defn is-password-valid-to-sled-rental-spec?
   [{:keys [lower upper character password]}]
