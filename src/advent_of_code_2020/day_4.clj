@@ -62,6 +62,7 @@
   (let [required-keys [:hcl :ecl :iyr :pid :hgt :eyr :byr]]
     (every? (partial contains? passport) required-keys)))
 
+;; TODO I could use spec to do this
 (defn passport-valid?
   [passport]
   (let [valid? ((every-pred all-fields-present?
