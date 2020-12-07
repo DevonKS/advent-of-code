@@ -1,7 +1,6 @@
 (ns advent-of-code-2020.day-5
   (:require [advent-of-code-2020.util :as util]
-            [clojure.set :as set]
-            [clojure.string :as string]))
+            [clojure.set :as set]))
 
 (defn binary-string->number
   [s char-0 char-1]
