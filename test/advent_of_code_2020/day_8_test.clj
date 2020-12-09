@@ -3,7 +3,7 @@
             [clojure.test :refer :all]
             [advent-of-code-2020.day-8 :refer :all]))
 
-(deftest day-1-part-1-test
+(deftest day-8-part-1-test
   (testing "Sample Data"
     (let [input "nop +0
 acc +1
@@ -22,7 +22,7 @@ acc +6"
     (is (= 1584
            (challenge-1!)))))
 
-(deftest day-1-part-2-test
+(deftest day-8-part-2-test
   (testing "Sample Data"
     (let [input "nop +0
 acc +1

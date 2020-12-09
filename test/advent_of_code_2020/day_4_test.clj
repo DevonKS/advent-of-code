@@ -3,7 +3,7 @@
             [clojure.test :refer :all]
             [advent-of-code-2020.day-4 :refer :all]))
 
-(deftest day-1-part-1-test
+(deftest day-4-part-1-test
   (testing "Sample Data"
     (let [passports (parse-input "ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
 byr:1937 iyr:2017 cid:147 hgt:183cm
@@ -24,7 +24,7 @@ iyr:2011 ecl:brn hgt:59in")]
     (is (= 196
            (challenge-1!)))))
 
-(deftest day-1-part-2-test
+(deftest day-4-part-2-test
   (testing "Sample Data"
     (let [passports (parse-input "eyr:1972 cid:100
 hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926

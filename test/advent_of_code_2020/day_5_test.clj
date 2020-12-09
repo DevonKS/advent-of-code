@@ -13,7 +13,7 @@
               {:row 102, :seat 4, :seat-id 820}]
              seats)))))
 
-(deftest day-1-part-1-test
+(deftest day-5-part-1-test
   (testing "Sample Data"
     (let [lines (string/split "FBFBBFFRLR\nBFFFBBFRRR\nFFFBBBFRRR\nBBFFBBFRLL" #"\n")
           seats (parse-input lines)]
@@ -23,7 +23,7 @@
     (is (= 850
            (challenge-1!)))))
 
-(deftest day-1-part-2-test
+(deftest day-5-part-2-test
   (testing "real-data"
     (is (= 599
            (challenge-2!)))))

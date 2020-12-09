@@ -3,7 +3,7 @@
             [clojure.test :refer :all]
             [advent-of-code-2020.day-7 :refer :all]))
 
-(deftest day-1-part-1-test
+(deftest day-7-part-1-test
   (testing "Sample Data"
     (let [graph (parse-input "light red bags contain 1 bright white bag, 2 muted yellow bags.
 dark orange bags contain 3 bright white bags, 4 muted yellow bags.
@@ -20,7 +20,7 @@ dotted black bags contain no other bags.")]
     (is (= 164
            (challenge-1!)))))
 
-(deftest day-1-part-2-test
+(deftest day-7-part-2-test
   (testing "Sample Data"
     (let [graph (parse-input "shiny gold bags contain 2 dark red bags.
 dark red bags contain 2 dark orange bags.

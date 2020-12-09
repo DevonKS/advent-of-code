@@ -3,7 +3,7 @@
             [clojure.test :refer :all]
             [advent-of-code-2020.day-3 :refer :all]))
 
-(deftest day-1-part-1-test
+(deftest day-3-part-1-test
   (testing "Sample Data"
     (let [lines (string/split  "..##.......\n#...#...#..\n.#....#..#.\n..#.#...#.#\n.#...##..#.\n..#.##.....\n.#.#.#....#\n.#........#\n#.##...#...\n#...##....#\n.#..#...#.#" #"\n")
           grid (parse-lines lines)]
@@ -13,7 +13,7 @@
     (is (= 162
            (challenge-1!)))))
 
-(deftest day-1-part-2-test
+(deftest day-3-part-2-test
   (testing "Sample Data"
     (let [lines (string/split  "..##.......\n#...#...#..\n.#....#..#.\n..#.#...#.#\n.#...##..#.\n..#.##.....\n.#.#.#....#\n.#........#\n#.##...#...\n#...##....#\n.#..#...#.#" #"\n")
           grid (parse-lines lines)]

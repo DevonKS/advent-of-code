@@ -3,7 +3,7 @@
             [clojure.test :refer :all]
             [advent-of-code-2020.day-6 :refer :all]))
 
-(deftest day-1-part-1-test
+(deftest day-6-part-1-test
   (testing "Sample Data"
     (let [groups (parse-input "abc
 
@@ -26,7 +26,7 @@ b")]
     (is (= 7283
            (challenge-1!)))))
 
-(deftest day-1-part-2-test
+(deftest day-6-part-2-test
   (testing "Sample Data"
     (let [groups (parse-input "abc
 
