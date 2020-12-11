@@ -13,7 +13,11 @@
   []
   (parse-input (util/challenge-file-lines! 11)))
 
-(def in-grid
+(defn get-seat
+  [seats [seat-idx row-idx]]
+  (nth (nth seats row-idx nil) seat-idx nil))
+
+(def in-seats
   (memoize
    (fn
      [[seat-idx row-idx] max-seat-idx max-row-idx]
@@ -23,42 +27,49 @@
           (<= seat-idx max-seat-idx)))))
 
 (defn find-first-seat-on-slope
-  [grid seat-coords max-seat-idx max-row-idx slope]
-  (loop [[seat-idx row-idx :as current-seat-coords] (map + seat-coords slope)]
-    (cond
-      (#{:occupied :empty} (get-in grid [row-idx seat-idx]))
-      current-seat-coords
+  [seats seat-coords max-seat-idx max-row-idx slope]
+  (loop [current-seat-coords (map + seat-coords slope)]
+    (let [current-seat (get-seat seats current-seat-coords)]
+      (cond
+        (= :floor current-seat)
+        (recur (map + current-seat-coords slope))
 
-      (not (in-grid current-seat-coords max-seat-idx max-row-idx))
-      nil
+        (#{:occupied :empty} current-seat)
+        current-seat-coords
 
-      :else
-      (recur (map + current-seat-coords slope)))))
+        (not (in-seats current-seat-coords max-seat-idx max-row-idx))
+        nil))))
+
+(def get-adjacent-coords-memo
+  (memoize
+   (fn
+     [[seat-idx row-idx] max-seat-idx max-row-idx]
+     (for [c-row-idx [(dec row-idx) row-idx (inc row-idx)]
+           c-seat-idx [(dec seat-idx) seat-idx (inc seat-idx)]
+           :when (and (in-seats [c-seat-idx c-row-idx] max-seat-idx max-row-idx)
+                      (not (and (= seat-idx c-seat-idx)
+                                (= row-idx c-row-idx))))]
+       [c-seat-idx c-row-idx]))))
 
 (defn get-adjacent-coords
-  [_ [seat-idx row-idx] max-seat-idx max-row-idx]
-  (for [c-row-idx [(dec row-idx) row-idx (inc row-idx)]
-        c-seat-idx [(dec seat-idx) seat-idx (inc seat-idx)]
-        :when (and (in-grid [c-seat-idx c-row-idx] max-seat-idx max-row-idx)
-                   (not (and (= seat-idx c-seat-idx)
-                             (= row-idx c-row-idx))))]
-    [c-seat-idx c-row-idx]))
+  [_ seat-coords max-seat-idx max-row-idx]
+  (get-adjacent-coords-memo seat-coords max-seat-idx max-row-idx))
 
 (defn get-adjacent-coords-2
-  [grid seat-coords max-seat-idx max-row-idx]
+  [seats seat-coords max-seat-idx max-row-idx]
   (into []
-        (keep (fn [slope] (find-first-seat-on-slope grid seat-coords max-seat-idx max-row-idx slope)))
+        (keep (fn [slope] (find-first-seat-on-slope seats seat-coords max-seat-idx max-row-idx slope)))
         [[-1 -1] [0 -1] [1 -1] [-1 0] [1 0] [-1 1] [0 1] [1 1]]))
 
 (defn num-adjacent-occupied
-  [grid seat-coords adj-coords-fns]
-  (let [max-seat-idx (dec (count (first grid)))
-        max-row-idx (dec (count grid))
-        adjacent-coords (adj-coords-fns grid seat-coords max-seat-idx max-row-idx)]
-    (util/count-if (fn [[seat-idx row-idx]] (= :occupied (get-in grid [row-idx seat-idx]))) adjacent-coords)))
+  [seats seat-coords adj-coords-fns]
+  (let [max-seat-idx (dec (count (first seats)))
+        max-row-idx (dec (count seats))
+        adjacent-coords (adj-coords-fns seats seat-coords max-seat-idx max-row-idx)]
+    (util/count-if #(= :occupied (get-seat seats %)) adjacent-coords)))
 
 (defn fill-seats
-  [grid adj-coords-fn uncomfortable-num-adj-occupied]
+  [seats adj-coords-fn uncomfortable-num-adj-occupied]
   (into []
         (map-indexed
          (fn [row-idx row]
@@ -66,16 +77,16 @@
                  (map-indexed
                   (fn [seat-idx seat]
                     (case seat
-                      :occupied (if (>= (num-adjacent-occupied grid [seat-idx row-idx] adj-coords-fn)
+                      :occupied (if (>= (num-adjacent-occupied seats [seat-idx row-idx] adj-coords-fn)
                                         uncomfortable-num-adj-occupied)
                                   :empty
                                   :occupied)
-                      :empty (if (zero? (num-adjacent-occupied grid [seat-idx row-idx] adj-coords-fn))
+                      :empty (if (zero? (num-adjacent-occupied seats [seat-idx row-idx] adj-coords-fn))
                                :occupied
                                :empty)
                       :floor :floor)))
                  row)))
-        grid))
+        seats))
 
 (defn num-occupied
   [seats]
@@ -83,13 +94,11 @@
 
 (defn fill-seats-till-equilibrium
   [seats adj-coords-fn uncomfortable-num-adj-occupied]
-  (loop [previous-num-occupied 0
-         seats seats]
-    (let [new-seats (fill-seats seats adj-coords-fn uncomfortable-num-adj-occupied)
-          current-num-occupied (num-occupied new-seats)]
-      (if (= previous-num-occupied current-num-occupied)
-        previous-num-occupied
-        (recur current-num-occupied new-seats)))))
+  (loop [seats seats]
+    (let [new-seats (fill-seats seats adj-coords-fn uncomfortable-num-adj-occupied)]
+      (if (= seats new-seats)
+        (num-occupied new-seats)
+        (recur new-seats)))))
 
 (defn challenge-1
   [seats]
