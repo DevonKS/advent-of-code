@@ -3,7 +3,7 @@
             [clojure.test :refer :all]
             [advent-of-code-2020.day-14 :refer :all]))
 
-(deftest day-13-part-1-test
+(deftest day-14-part-1-test
   (testing "Sample Data"
     (let [input "mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
 mem[8] = 11
