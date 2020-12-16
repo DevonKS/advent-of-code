@@ -1,7 +1,4 @@
-(ns advent-of-code-2020.day-15
-  (:require [advent-of-code-2020.util :as util]
-            [clojure.string :as string]
-            [clojure.math.combinatorics :as combo]))
+(ns advent-of-code-2020.day-15)
 
 (defn play-memory-game
   [starting-numbers end]
