@@ -56,3 +56,8 @@
   [x]
   (try (Integer/parseInt x)
        (catch Exception _ nil)))
+
+(defn parse-long
+  [x]
+  (try (Long/parseLong x)
+       (catch Exception _ nil)))
