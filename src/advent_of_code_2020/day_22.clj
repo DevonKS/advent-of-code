@@ -1,8 +1,6 @@
 (ns advent-of-code-2020.day-22
   (:require [advent-of-code-2020.util :as util]
-            [clojure.string :as string]
-            [clojure.math.combinatorics :as combo]
-            [clojure.set :as cset]))
+            [clojure.string :as string]))
 
 (defn parse-player
   [raw-player]

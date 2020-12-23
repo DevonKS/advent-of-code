@@ -1,7 +1,6 @@
 (ns advent-of-code-2020.day-16
   (:require [advent-of-code-2020.util :as util]
-            [clojure.string :as string]
-            [clojure.math.combinatorics :as combo]))
+            [clojure.string :as string]))
 
 (defn parse-rule
   [rule]

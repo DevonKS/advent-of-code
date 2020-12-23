@@ -1,7 +1,7 @@
 (ns advent-of-code-2020.day-6
   (:require [advent-of-code-2020.util :as util]
-            [clojure.string :as string]
-            [clojure.set :as set]))
+            [clojure.set :as set]
+            [clojure.string :as string]))
 
 (defn parse-group
   [group]
