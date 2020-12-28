@@ -1,6 +1,5 @@
 (ns advent-of-code-2020.day-22-test
-  (:require [clojure.string :as string]
-            [clojure.test :refer :all]
+  (:require [clojure.test :refer :all]
             [advent-of-code-2020.day-22 :refer :all]))
 
 (deftest day-22-part-1-test
