@@ -2,30 +2,6 @@
   (:require [advent-of-code-2020.util :as util]
             [clojure.string :as string]))
 
-(def input-string
-  "sesenwnenenewseeswwswswwnenewsewsw
-neeenesenwnwwswnenewnwwsewnenwseswesw
-seswneswswsenwwnwse
-nwnwneseeswswnenewneswwnewseswneseene
-swweswneswnenwsewnwneneseenw
-eesenwseswswnenwswnwnwsewwnwsene
-sewnenenenesenwsewnenwwwse
-wenwwweseeeweswwwnwwe
-wsweesenenewnwwnwsenewsenwwsesesenwne
-neeswseenwwswnwswswnw
-nenwswwsewswnenenewsenwsenwnesesenew
-enewnwewneswsewnwswenweswnenwsenwsw
-sweneswneswneneenwnewenewwneswswnese
-swwesenesewenwneswnwwneseswwne
-enesenwswwswneneswsenwnewswseenwsese
-wnwnesenesenenwwnenwsewesewsesesew
-nenewswnwewswnenesenwnesewesw
-eneswnwswnwsenenwnwnwwseeswneewsenese
-neswnwewnwnwseenwseesewsenwsweewe
-wseweeenwnesenwwwswnew")
-
-(def input-lines (string/split-lines input-string))
-
 (defn parse-instructions
   [raw-instructions]
   (loop [raw-instructions (seq raw-instructions)
@@ -41,8 +17,6 @@ wseweeenwnesenwwwswnew")
 (defn parse-input
   [input]
   (mapv parse-instructions input))
-
-(def sample-input (parse-input input-lines))
 
 (defn parse-input!
   []
