@@ -8,3 +8,8 @@
 (deftest test-challenge-1
   (ok (equal 3638931938
              (advent-of-code-2019.day-9::challenge-1 "../resources/day-9-input" '(1)))))
+
+
+(deftest test-challenge-2
+  (ok (equal 86025
+             (advent-of-code-2019.day-9::challenge-2 "../resources/day-9-input" '(2)))))

@@ -83,7 +83,7 @@
          (my-ancestors (get-ancestors relationships "YOU"))
          (santa-ancestors (get-ancestors relationships "SAN"))
          (common-ancestor (first (remove-if-not (lambda (item)
-                                                  (member item santa-ancestors :test #' equal))
+                                                  (member item santa-ancestors :test #'equal))
                                                 my-ancestors)))
          (num-orbital-transfers (+ (position common-ancestor my-ancestors :test #'equal)
                                    (position common-ancestor santa-ancestors :test #'equal))))
