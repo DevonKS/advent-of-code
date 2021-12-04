@@ -14,7 +14,7 @@ fn challenge_2(game: &BingoGame) -> i32 {
         let last_board_to_win = local_game.boards.iter().filter(|b| !b.has_won).count() == 1;
         for board in local_game.boards.iter_mut() {
             if !board.has_won {
-                for row in &mut *board.board {
+                for row in board.board.iter_mut() {
                     for mut cell in row {
                         if !cell.marked && cell.n == num {
                             cell.marked = true
@@ -41,7 +41,7 @@ fn challenge_1(game: &BingoGame) -> i32 {
     let mut local_game = game.clone();
     'num_loop: for num in local_game.nums {
         for board in local_game.boards.iter_mut() {
-            for row in &mut *board.board {
+            for row in board.board.iter_mut() {
                 for mut cell in row {
                     if !cell.marked && cell.n == num {
                         cell.marked = true
@@ -63,16 +63,7 @@ fn is_win(board: &Vec<Vec<BingoCell>>) -> bool {
     let mut col_range = 0..board[0].len();
 
     board.iter().any(|row| row.iter().all(|c| c.marked))
-        || col_range.any(|i| {
-            let mut res = true;
-            for row in board {
-                if !row[i].marked {
-                    res = false;
-                    break;
-                }
-            }
-            res
-        })
+        || col_range.any(|i| board.iter().all(|r| r[i].marked))
 }
 
 fn get_unmarked(board: &Vec<Vec<BingoCell>>) -> Vec<i32> {
