@@ -1,15 +1,14 @@
-use regex::Regex;
-use std::fs::File;
-use std::io::{self, BufRead};
-use std::path::Path;
+use crate::utils;
 
-pub fn main() {
-    let input = read_input("resources/day-02-input.txt");
-    println!("{}", challenge_1(&input));
-    println!("{}", challenge_2(&input));
+use regex::Regex;
+
+pub fn run() {
+    let input = read_input(utils::InputType::Main);
+    println!("{}", part1(&input));
+    println!("{}", part2(&input));
 }
 
-fn challenge_2(insts: &Vec<Instruction>) -> i32 {
+fn part2(insts: &Vec<Instruction>) -> i32 {
     let mut pos = Position {
         horizontal_pos: 0,
         depth: 0,
@@ -28,7 +27,7 @@ fn challenge_2(insts: &Vec<Instruction>) -> i32 {
     pos.horizontal_pos * pos.depth
 }
 
-fn challenge_1(insts: &Vec<Instruction>) -> i32 {
+fn part1(insts: &Vec<Instruction>) -> i32 {
     let mut pos = Position {
         horizontal_pos: 0,
         depth: 0,
@@ -44,13 +43,10 @@ fn challenge_1(insts: &Vec<Instruction>) -> i32 {
     pos.horizontal_pos * pos.depth
 }
 
-fn read_input(filepath: &str) -> Vec<Instruction> {
-    let lines = read_lines(filepath).unwrap();
-    let mut v: Vec<Instruction> = Vec::new();
-    for line_result in lines {
-        let line = line_result.unwrap();
+fn read_input(it: utils::InputType) -> Vec<Instruction> {
+    utils::parse_file(utils::Day::Day02, it, |s| {
         let re = Regex::new(r"^(forward|down|up) (\d+)$").unwrap();
-        let caps = re.captures(&line).unwrap();
+        let caps = re.captures(s).unwrap();
         let inst = Instruction {
             command: match caps.get(1).unwrap().as_str() {
                 "forward" => Command::Forward,
@@ -60,9 +56,8 @@ fn read_input(filepath: &str) -> Vec<Instruction> {
             },
             size: caps.get(2).unwrap().as_str().parse().unwrap(),
         };
-        v.push(inst)
-    }
-    v
+        inst
+    })
 }
 
 struct Position {
@@ -82,17 +77,6 @@ struct Instruction {
     size: u32,
 }
 
-// FIXME Move this into a utility
-// The output is wrapped in a Result to allow matching on errors
-// Returns an Iterator to the Reader of the lines of the file.
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
-}
-
 mod tests {
     // FIXME Why am I getting a unsed import warning here?
     #[allow(unused_imports)]
@@ -100,25 +84,25 @@ mod tests {
 
     #[test]
     fn challenge_1_example() {
-        let insts = read_input("resources/day-02-test-input.txt");
-        assert_eq!(challenge_1(&insts), 150);
+        let insts = read_input(utils::InputType::Example);
+        assert_eq!(part1(&insts), 150);
     }
 
     #[test]
     fn challenge_1_real() {
-        let insts = read_input("resources/day-02-input.txt");
-        assert_eq!(challenge_1(&insts), 1882980);
+        let insts = read_input(utils::InputType::Main);
+        assert_eq!(part1(&insts), 1882980);
     }
 
     #[test]
     fn challenge_2_example() {
-        let insts = read_input("resources/day-02-test-input.txt");
-        assert_eq!(challenge_2(&insts), 900);
+        let insts = read_input(utils::InputType::Example);
+        assert_eq!(part2(&insts), 900);
     }
 
     #[test]
     fn challenge_2_real() {
-        let insts = read_input("resources/day-02-input.txt");
-        assert_eq!(challenge_2(&insts), 1971232560);
+        let insts = read_input(utils::InputType::Main);
+        assert_eq!(part2(&insts), 1971232560);
     }
 }

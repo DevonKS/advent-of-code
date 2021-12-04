@@ -1,13 +1,14 @@
-use std::fmt;
-use std::fs::read_to_string;
+use crate::utils;
 
-pub fn main() {
-    let game = read_input("resources/day-04-input.txt");
-    println!("{}", challenge_1(&game));
-    println!("{}", challenge_2(&game));
+use std::fmt;
+
+pub fn run() {
+    let game = read_input(utils::InputType::Main);
+    println!("{}", part1(&game));
+    println!("{}", part2(&game));
 }
 
-fn challenge_2(game: &BingoGame) -> i32 {
+fn part2(game: &BingoGame) -> i32 {
     let mut result: i32 = 0;
     let mut local_game = game.clone();
     'num_loop: for num in local_game.nums {
@@ -36,7 +37,7 @@ fn challenge_2(game: &BingoGame) -> i32 {
     result
 }
 
-fn challenge_1(game: &BingoGame) -> i32 {
+fn part1(game: &BingoGame) -> i32 {
     let mut result: i32 = 0;
     let mut local_game = game.clone();
     'num_loop: for num in local_game.nums {
@@ -78,9 +79,8 @@ fn get_unmarked(board: &Vec<Vec<BingoCell>>) -> Vec<i32> {
     v
 }
 
-fn read_input(filepath: &str) -> BingoGame {
-    let xs: Vec<String> = read_to_string(filepath)
-        .unwrap()
+fn read_input(it: utils::InputType) -> BingoGame {
+    let xs: Vec<String> = utils::read_file(utils::Day::Day04, it)
         .trim()
         .split("\n\n")
         .map(|s| s.to_string())
@@ -168,25 +168,25 @@ mod tests {
 
     #[test]
     fn challenge_1_example() {
-        let game = read_input("resources/day-04-test-input.txt");
-        assert_eq!(challenge_1(&game), 4512);
+        let game = read_input(utils::InputType::Example);
+        assert_eq!(part1(&game), 4512);
     }
 
     #[test]
     fn challenge_1_real() {
-        let game = read_input("resources/day-04-input.txt");
-        assert_eq!(challenge_1(&game), 69579);
+        let game = read_input(utils::InputType::Main);
+        assert_eq!(part1(&game), 69579);
     }
 
     #[test]
     fn challenge_2_example() {
-        let game = read_input("resources/day-04-test-input.txt");
-        assert_eq!(challenge_2(&game), 1924);
+        let game = read_input(utils::InputType::Example);
+        assert_eq!(part2(&game), 1924);
     }
 
     #[test]
     fn challenge_2_real() {
-        let game = read_input("resources/day-04-input.txt");
-        assert_eq!(challenge_2(&game), 14877);
+        let game = read_input(utils::InputType::Main);
+        assert_eq!(part2(&game), 14877);
     }
 }

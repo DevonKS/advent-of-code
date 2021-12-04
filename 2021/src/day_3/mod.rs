@@ -1,14 +1,12 @@
-use std::fs::File;
-use std::io::{self, BufRead};
-use std::path::Path;
+use crate::utils;
 
-pub fn main() {
-    let input = read_input("resources/day-03-input.txt");
-    println!("{}", challenge_1(&input));
-    println!("{}", challenge_2(&input));
+pub fn run() {
+    let input = read_input(utils::InputType::Main);
+    println!("{}", part1(&input));
+    println!("{}", part2(&input));
 }
 
-fn challenge_2(binary_nums: &Vec<Vec<char>>) -> i32 {
+fn part2(binary_nums: &Vec<Vec<char>>) -> i32 {
     find_number(binary_nums, 0, true) * find_number(binary_nums, 0, false)
 }
 
@@ -44,7 +42,7 @@ fn bit_criteria(binary_nums: &Vec<Vec<char>>, i: usize, most: bool) -> char {
     }
 }
 
-fn challenge_1(binary_nums: &Vec<Vec<char>>) -> i32 {
+fn part1(binary_nums: &Vec<Vec<char>>) -> i32 {
     let mut gamma = String::new();
     let mut epsilon = String::new();
     for i in 0..binary_nums[0].len() {
@@ -69,25 +67,8 @@ fn challenge_1(binary_nums: &Vec<Vec<char>>) -> i32 {
     i32::from_str_radix(&gamma, 2).unwrap() * i32::from_str_radix(&epsilon, 2).unwrap()
 }
 
-fn read_input(filepath: &str) -> Vec<Vec<char>> {
-    let lines = read_lines(filepath).unwrap();
-    let mut v: Vec<Vec<char>> = Vec::new();
-    for line_result in lines {
-        let line = line_result.unwrap().chars().collect();
-        v.push(line)
-    }
-    v
-}
-
-// FIXME Move this into a utility
-// The output is wrapped in a Result to allow matching on errors
-// Returns an Iterator to the Reader of the lines of the file.
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
+fn read_input(it: utils::InputType) -> Vec<Vec<char>> {
+    utils::parse_file(utils::Day::Day03, it, |s| s.chars().collect())
 }
 
 mod tests {
@@ -97,25 +78,25 @@ mod tests {
 
     #[test]
     fn challenge_1_example() {
-        let binary_nums = read_input("resources/day-03-test-input.txt");
-        assert_eq!(challenge_1(&binary_nums), 198);
+        let binary_nums = read_input(utils::InputType::Example);
+        assert_eq!(part1(&binary_nums), 198);
     }
 
     #[test]
     fn challenge_1_real() {
-        let binary_nums = read_input("resources/day-03-input.txt");
-        assert_eq!(challenge_1(&binary_nums), 1131506);
+        let binary_nums = read_input(utils::InputType::Main);
+        assert_eq!(part1(&binary_nums), 1131506);
     }
 
     #[test]
     fn challenge_2_example() {
-        let binary_nums = read_input("resources/day-03-test-input.txt");
-        assert_eq!(challenge_2(&binary_nums), 230);
+        let binary_nums = read_input(utils::InputType::Example);
+        assert_eq!(part2(&binary_nums), 230);
     }
 
     #[test]
     fn challenge_2_real() {
-        let binary_nums = read_input("resources/day-03-input.txt");
-        assert_eq!(challenge_2(&binary_nums), 7863147);
+        let binary_nums = read_input(utils::InputType::Main);
+        assert_eq!(part2(&binary_nums), 7863147);
     }
 }
