@@ -77,31 +77,33 @@ struct Instruction {
     size: u32,
 }
 
+#[cfg(test)]
 mod tests {
-    // FIXME Why am I getting a unsed import warning here?
-    #[allow(unused_imports)]
-    use super::*;
+    use crate::day02::part1;
+    use crate::day02::part2;
+    use crate::day02::read_input;
+    use crate::utils;
 
     #[test]
-    fn challenge_1_example() {
+    fn part1_example() {
         let insts = read_input(utils::InputType::Example);
         assert_eq!(part1(&insts), 150);
     }
 
     #[test]
-    fn challenge_1_real() {
+    fn part1_main() {
         let insts = read_input(utils::InputType::Main);
         assert_eq!(part1(&insts), 1882980);
     }
 
     #[test]
-    fn challenge_2_example() {
+    fn part2_example() {
         let insts = read_input(utils::InputType::Example);
         assert_eq!(part2(&insts), 900);
     }
 
     #[test]
-    fn challenge_2_real() {
+    fn part2_main() {
         let insts = read_input(utils::InputType::Main);
         assert_eq!(part2(&insts), 1971232560);
     }

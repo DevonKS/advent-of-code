@@ -1,9 +1,9 @@
 extern crate clap;
 
-mod day_1;
-mod day_2;
-mod day_3;
-mod day_4;
+mod day01;
+mod day02;
+mod day03;
+mod day04;
 mod utils;
 
 use std::collections::HashMap;
@@ -11,10 +11,10 @@ use std::collections::HashSet;
 
 fn main() {
     let mut day_to_fn: HashMap<String, fn() -> ()> = HashMap::new();
-    day_to_fn.insert("1".to_string(), day_1::run);
-    day_to_fn.insert("2".to_string(), day_2::run);
-    day_to_fn.insert("3".to_string(), day_3::run);
-    day_to_fn.insert("4".to_string(), day_4::run);
+    day_to_fn.insert("1".to_string(), day01::run);
+    day_to_fn.insert("2".to_string(), day02::run);
+    day_to_fn.insert("3".to_string(), day03::run);
+    day_to_fn.insert("4".to_string(), day04::run);
 
     let args = clap::App::new("Advent of Code 2021")
         .arg(

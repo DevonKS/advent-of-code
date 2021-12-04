@@ -3,6 +3,7 @@ use std::io::{self, BufRead};
 
 pub fn parse_file<T>(d: Day, it: InputType, f: fn(&str) -> T) -> Vec<T> {
     let filename = filename_from_day_and_input_type(d, it);
+    println!("{}", filename);
     let file = File::open(filename).unwrap();
     let lines = io::BufReader::new(file).lines();
     let mut res: Vec<T> = Vec::new();
@@ -25,6 +26,8 @@ fn filename_from_day_and_input_type(d: Day, it: InputType) -> String {
     format!("resources/day-{}{}-input.txt", d.value(), example_str)
 }
 
+// FIXME Remove this allow dead code once all days are done
+#[allow(dead_code)]
 pub enum Day {
     Day01,
     Day02,

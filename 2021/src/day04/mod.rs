@@ -161,31 +161,33 @@ impl fmt::Debug for BingoCell {
     }
 }
 
+#[cfg(test)]
 mod tests {
-    // FIXME Why am I getting a unsed import warning here?
-    #[allow(unused_imports)]
-    use super::*;
+    use crate::day04::part1;
+    use crate::day04::part2;
+    use crate::day04::read_input;
+    use crate::utils;
 
     #[test]
-    fn challenge_1_example() {
+    fn part1_example() {
         let game = read_input(utils::InputType::Example);
         assert_eq!(part1(&game), 4512);
     }
 
     #[test]
-    fn challenge_1_real() {
+    fn part1_real() {
         let game = read_input(utils::InputType::Main);
         assert_eq!(part1(&game), 69579);
     }
 
     #[test]
-    fn challenge_2_example() {
+    fn part2_example() {
         let game = read_input(utils::InputType::Example);
         assert_eq!(part2(&game), 1924);
     }
 
     #[test]
-    fn challenge_2_real() {
+    fn part2_real() {
         let game = read_input(utils::InputType::Main);
         assert_eq!(part2(&game), 14877);
     }

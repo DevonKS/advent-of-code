@@ -71,31 +71,33 @@ fn read_input(it: utils::InputType) -> Vec<Vec<char>> {
     utils::parse_file(utils::Day::Day03, it, |s| s.chars().collect())
 }
 
+#[cfg(test)]
 mod tests {
-    // FIXME Why am I getting a unsed import warning here?
-    #[allow(unused_imports)]
-    use super::*;
+    use crate::day03::part1;
+    use crate::day03::part2;
+    use crate::day03::read_input;
+    use crate::utils;
 
     #[test]
-    fn challenge_1_example() {
+    fn part1_example() {
         let binary_nums = read_input(utils::InputType::Example);
         assert_eq!(part1(&binary_nums), 198);
     }
 
     #[test]
-    fn challenge_1_real() {
+    fn part1_real() {
         let binary_nums = read_input(utils::InputType::Main);
         assert_eq!(part1(&binary_nums), 1131506);
     }
 
     #[test]
-    fn challenge_2_example() {
+    fn part2_example() {
         let binary_nums = read_input(utils::InputType::Example);
         assert_eq!(part2(&binary_nums), 230);
     }
 
     #[test]
-    fn challenge_2_real() {
+    fn part2_real() {
         let binary_nums = read_input(utils::InputType::Main);
         assert_eq!(part2(&binary_nums), 7863147);
     }
