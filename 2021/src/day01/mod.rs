@@ -1,7 +1,7 @@
 use crate::utils;
 
-pub fn run() {
-    let nums = read_input(utils::InputType::Main);
+pub fn run(it: utils::InputType) {
+    let nums = read_input(it);
     println!("{}", part1(&nums));
     println!("{}", part2(&nums));
 }

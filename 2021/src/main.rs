@@ -10,7 +10,7 @@ use std::collections::HashMap;
 use std::collections::HashSet;
 
 fn main() {
-    let mut day_to_fn: HashMap<String, fn() -> ()> = HashMap::new();
+    let mut day_to_fn: HashMap<String, fn(utils::InputType) -> ()> = HashMap::new();
     day_to_fn.insert("1".to_string(), day01::run);
     day_to_fn.insert("2".to_string(), day02::run);
     day_to_fn.insert("3".to_string(), day03::run);
@@ -26,10 +26,21 @@ fn main() {
                 .required(true)
                 .validator(validate_day),
         )
+        .arg(
+            clap::Arg::with_name("example")
+                .help("Run the example")
+                .short("e")
+                .long("example"),
+        )
         .get_matches();
 
     let day_runner = day_to_fn.get(args.value_of("day").unwrap()).unwrap();
-    day_runner();
+    let it = if args.is_present("example") {
+        utils::InputType::Example
+    } else {
+        utils::InputType::Main
+    };
+    day_runner(it);
 }
 
 fn validate_day(val: String) -> Result<(), String> {

@@ -2,8 +2,8 @@ use crate::utils;
 
 use std::fmt;
 
-pub fn run() {
-    let game = read_input(utils::InputType::Main);
+pub fn run(it: utils::InputType) {
+    let game = read_input(it);
     println!("{}", part1(&game));
     println!("{}", part2(&game));
 }
