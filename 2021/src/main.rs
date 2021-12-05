@@ -4,6 +4,7 @@ mod day01;
 mod day02;
 mod day03;
 mod day04;
+mod day05;
 mod utils;
 
 use std::collections::HashMap;
@@ -15,6 +16,7 @@ fn main() {
     day_to_fn.insert("2".to_string(), day02::run);
     day_to_fn.insert("3".to_string(), day03::run);
     day_to_fn.insert("4".to_string(), day04::run);
+    day_to_fn.insert("5".to_string(), day05::run);
 
     let args = clap::App::new("Advent of Code 2021")
         .arg(
@@ -50,6 +52,7 @@ fn validate_day(val: String) -> Result<(), String> {
     valid_days.insert("2");
     valid_days.insert("3");
     valid_days.insert("4");
+    valid_days.insert("5");
 
     if valid_days.contains(&val as &str) {
         Ok(())
