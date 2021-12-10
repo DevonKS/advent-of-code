@@ -35,96 +35,41 @@ fn determine_mapping(entry: &Entry) -> HashMap<char, char> {
         ('g', all_chars.clone()),
     ]);
 
+    let mut cs_6: HashSet<char> = HashSet::new();
     for pattern in &entry.signal_patterns {
         let l = pattern.len();
         if l == 2 {
-            ['c', 'f'].iter().for_each(|c| {
-                *possible_mappings.get_mut(c).unwrap() = pattern
-                    .clone()
-                    .intersection(&possible_mappings[c])
-                    .map(|c| *c)
-                    .collect()
-            });
-            ['a', 'b', 'd', 'e', 'g'].iter().for_each(|c| {
-                if possible_mappings[c].len() > 1 {
-                    let new_mappings = possible_mappings[c]
-                        .iter()
-                        .filter(|mc| !pattern.contains(mc))
-                        .map(|c| *c)
-                        .collect();
-                    *possible_mappings.get_mut(c).unwrap() = new_mappings;
-                }
-            });
+            update_possible_mappings(
+                &['c', 'f'].to_vec(),
+                &['a', 'b', 'd', 'e', 'g'].to_vec(),
+                pattern,
+                &mut possible_mappings,
+            );
         } else if l == 3 {
-            ['a', 'c', 'f'].iter().for_each(|c| {
-                *possible_mappings.get_mut(c).unwrap() = pattern
-                    .clone()
-                    .intersection(&possible_mappings[c])
-                    .map(|c| *c)
-                    .collect()
-            });
-            ['b', 'd', 'e', 'g'].iter().for_each(|c| {
-                if possible_mappings[c].len() > 1 {
-                    let new_mappings = possible_mappings[c]
-                        .iter()
-                        .filter(|mc| !pattern.contains(mc))
-                        .map(|c| *c)
-                        .collect();
-                    *possible_mappings.get_mut(c).unwrap() = new_mappings;
-                }
-            });
+            update_possible_mappings(
+                &['a', 'c', 'f'].to_vec(),
+                &['b', 'd', 'e', 'g'].to_vec(),
+                pattern,
+                &mut possible_mappings,
+            );
         } else if l == 4 {
-            ['b', 'c', 'd', 'f'].iter().for_each(|c| {
-                *possible_mappings.get_mut(c).unwrap() = pattern
-                    .clone()
-                    .intersection(&possible_mappings[c])
-                    .map(|c| *c)
-                    .collect()
-            });
-            ['a', 'e', 'g'].iter().for_each(|c| {
-                if possible_mappings[c].len() > 1 {
-                    let new_mappings = possible_mappings[c]
-                        .iter()
-                        .filter(|mc| !pattern.contains(mc))
-                        .map(|c| *c)
-                        .collect();
-                    *possible_mappings.get_mut(c).unwrap() = new_mappings;
-                }
-            });
-        }
-    }
-
-    let mut cs_6: HashSet<char> = HashSet::new();
-    for pattern in &entry.signal_patterns {
-        if pattern.len() == 6 {
+            update_possible_mappings(
+                &['b', 'c', 'd', 'f'].to_vec(),
+                &['a', 'e', 'g'].to_vec(),
+                pattern,
+                &mut possible_mappings,
+            );
+        } else if l == 6 {
             cs_6.insert(*all_chars.difference(&pattern).next().unwrap());
         }
     }
 
-    ['c', 'd', 'e'].iter().for_each(|c| {
-        if possible_mappings[c].len() > 1 {
-            let possible_chars: HashSet<char> = possible_mappings[c]
-                .intersection(&cs_6)
-                .map(|c| *c)
-                .collect();
-            if possible_chars.len() == 1 {
-                let matching_char = possible_chars.into_iter().next().unwrap();
-
-                *possible_mappings.get_mut(c).unwrap() = HashSet::from([matching_char]);
-
-                let mut other_chars = all_chars.clone();
-                other_chars.remove(c);
-                other_chars.iter().for_each(|c2| {
-                    possible_mappings
-                        .get_mut(c2)
-                        .unwrap()
-                        .remove(&matching_char);
-                });
-
-                cs_6.remove(&matching_char);
-            }
-        }
-    });
+    update_possible_mappings(
+        &['c', 'd', 'e'].to_vec(),
+        &['a', 'b', 'c', 'f', 'g'].to_vec(),
+        &cs_6,
+        &mut possible_mappings,
+    );
 
     assert!(possible_mappings.iter().all(|(_k, v)| v.len() == 1));
 
@@ -133,6 +78,30 @@ fn determine_mapping(entry: &Entry) -> HashMap<char, char> {
         mappings.insert(*v.iter().next().unwrap(), k);
     }
     mappings
+}
+
+fn update_possible_mappings(
+    in_set: &Vec<char>,
+    out_set: &Vec<char>,
+    chars: &HashSet<char>,
+    possible_mappings: &mut HashMap<char, HashSet<char>>,
+) {
+    in_set.iter().for_each(|c| {
+        if possible_mappings[c].len() > 1 {
+            *possible_mappings.get_mut(c).unwrap() = possible_mappings[c]
+                .intersection(&chars)
+                .map(|c| *c)
+                .collect()
+        }
+    });
+    out_set.iter().for_each(|c| {
+        if possible_mappings[c].len() > 1 {
+            *possible_mappings.get_mut(c).unwrap() = possible_mappings[c]
+                .difference(&chars)
+                .map(|c| *c)
+                .collect();
+        }
+    });
 }
 
 fn decode_value(val: &HashSet<char>, mapping: &HashMap<char, char>) -> char {
