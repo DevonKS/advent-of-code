@@ -1,7 +1,5 @@
 use crate::utils;
 
-use std::fmt;
-
 pub fn run(it: utils::InputType) {
     let game = read_input(it);
     println!("{}", part1(&game));
@@ -110,55 +108,22 @@ fn read_input(it: utils::InputType) -> BingoGame {
     bingo_game
 }
 
+#[derive(Debug, Clone)]
 struct BingoGame {
     nums: Vec<i32>,
     boards: Vec<BingoBoard>,
 }
 
-impl Clone for BingoGame {
-    fn clone(&self) -> BingoGame {
-        BingoGame {
-            nums: self.nums.clone(),
-            boards: self.boards.clone(),
-        }
-    }
-}
-
+#[derive(Debug, Clone)]
 struct BingoBoard {
     has_won: bool,
     board: Vec<Vec<BingoCell>>,
 }
 
-impl Clone for BingoBoard {
-    fn clone(&self) -> BingoBoard {
-        BingoBoard {
-            has_won: self.has_won,
-            board: self.board.clone(),
-        }
-    }
-}
-
+#[derive(Debug, Clone)]
 struct BingoCell {
     n: i32,
     marked: bool,
-}
-
-impl Clone for BingoCell {
-    fn clone(&self) -> BingoCell {
-        BingoCell {
-            n: self.n,
-            marked: self.marked,
-        }
-    }
-}
-
-impl fmt::Debug for BingoCell {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("BingoCell")
-            .field("n", &self.n)
-            .field("marked", &self.marked)
-            .finish()
-    }
 }
 
 #[cfg(test)]

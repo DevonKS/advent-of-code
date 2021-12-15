@@ -2,7 +2,6 @@ use crate::utils;
 
 use regex::Regex;
 use std::collections::HashMap;
-use std::fmt;
 
 pub fn run(it: utils::InputType) {
     let input = read_input(it);
@@ -114,34 +113,10 @@ struct Line {
     end: Point,
 }
 
-#[derive(Eq, PartialOrd, Ord, Hash)]
+#[derive(Eq, PartialEq, PartialOrd, Ord, Hash, Clone, Debug)]
 struct Point {
     x: i32,
     y: i32,
-}
-
-impl PartialEq for Point {
-    fn eq(&self, other: &Self) -> bool {
-        self.x == other.x && self.y == other.y
-    }
-}
-
-impl Clone for Point {
-    fn clone(&self) -> Point {
-        Point {
-            x: self.x,
-            y: self.y,
-        }
-    }
-}
-
-impl fmt::Debug for Point {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Point")
-            .field("x", &self.x)
-            .field("y", &self.y)
-            .finish()
-    }
 }
 
 #[cfg(test)]
