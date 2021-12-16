@@ -1,5 +1,7 @@
 extern crate clap;
 
+mod utils;
+
 mod day01;
 mod day02;
 mod day03;
@@ -11,7 +13,6 @@ mod day08;
 mod day09;
 mod day10;
 mod day11;
-mod utils;
 
 use std::collections::HashMap;
 use std::collections::HashSet;

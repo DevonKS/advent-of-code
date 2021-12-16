@@ -1,11 +1,12 @@
+use crate::time;
 use crate::utils;
 
 use regex::Regex;
 
 pub fn run(it: utils::InputType) {
     let input = read_input(it);
-    println!("{}", part1(&input));
-    println!("{}", part2(&input));
+    time!("Part 1", println!("{}", part1(&input)));
+    time!("Part 2", println!("{}", part2(&input)));
 }
 
 fn part2(insts: &Vec<Instruction>) -> i32 {

@@ -1,9 +1,10 @@
+use crate::time;
 use crate::utils;
 
 pub fn run(it: utils::InputType) {
     let game = read_input(it);
-    println!("{}", part1(&game));
-    println!("{}", part2(&game));
+    time!("Part 1", println!("{}", part1(&game)));
+    time!("Part 2", println!("{}", part2(&game)));
 }
 
 fn part2(game: &BingoGame) -> i32 {

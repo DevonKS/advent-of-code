@@ -92,3 +92,12 @@ pub enum InputType {
     Main,
     Example,
 }
+
+#[macro_export]
+macro_rules! time {
+    ($context: literal, $s: stmt) => {
+        let timer = std::time::Instant::now();
+        $s
+        println!("{} took: {:?}\n", $context, timer.elapsed())
+    }
+}

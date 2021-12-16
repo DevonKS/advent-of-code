@@ -1,9 +1,10 @@
+use crate::time;
 use crate::utils;
 
 pub fn run(it: utils::InputType) {
     let input = read_input(it);
-    println!("{}", part1(&input));
-    println!("{}", part2(&input));
+    time!("Part 1", println!("{}", part1(&input)));
+    time!("Part 2", println!("{}", part2(&input)));
 }
 
 fn part2(nums: &Vec<u32>) -> u32 {
