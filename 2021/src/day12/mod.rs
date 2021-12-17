@@ -1,8 +1,6 @@
 use crate::time;
 use crate::utils;
 
-use counter::Counter;
-
 use std::collections::HashMap;
 use std::collections::HashSet;
 
@@ -15,35 +13,40 @@ pub fn run(it: utils::InputType) {
 fn part2(graph: &HashMap<String, HashSet<String>>) -> u64 {
     let start_node: &str = "start";
     let end_node: &str = "end";
-    let mut temp_paths: Vec<Vec<&str>> = Vec::new();
     let mut final_paths: Vec<Vec<&str>> = Vec::new();
-    for child in &graph[start_node] {
-        temp_paths.push(vec![start_node, &child]);
-    }
 
-    while temp_paths.len() > 0 {
-        let path = temp_paths.pop().unwrap();
+    let mut stack: Vec<(Vec<&str>, HashSet<&str>, bool)> = Vec::new();
+    stack.push((vec![start_node], HashSet::new(), false));
+    while stack.len() > 0 {
+        let (path, seen, twice) = stack.pop().unwrap();
         let last_node: &str = *path.last().unwrap();
         for child in &graph[last_node] {
             if child == start_node {
                 continue;
             }
 
-            let mut new_path = path.clone();
-            new_path.push(child);
             if child == end_node {
+                let mut new_path = path.clone();
+                new_path.push(child);
                 final_paths.push(new_path);
-            } else {
-                let small_caves_counts = new_path
-                    .iter()
-                    .skip(1)
-                    .filter(|&s| s.chars().all(|c| c.is_ascii_lowercase()))
-                    .collect::<Counter<_>>();
-                let num_small_cave_visits =
-                    small_caves_counts.iter().map(|(_k, v)| *v).sum::<usize>();
-                if num_small_cave_visits <= small_caves_counts.len() + 1 {
-                    temp_paths.push(new_path);
+                continue;
+            }
+
+            let is_small_cave = child.chars().all(|c| c.is_ascii_lowercase());
+
+            if is_small_cave {
+                let child_seen = seen.contains(child as &str);
+                if !child_seen || !twice {
+                    let mut new_path = path.clone();
+                    new_path.push(child);
+                    let mut new_seen = seen.clone();
+                    new_seen.insert(&child);
+                    stack.push((new_path, new_seen, child_seen || twice))
                 }
+            } else {
+                let mut new_path = path.clone();
+                new_path.push(child);
+                stack.push((new_path, seen.clone(), twice))
             }
         }
     }
@@ -54,32 +57,37 @@ fn part2(graph: &HashMap<String, HashSet<String>>) -> u64 {
 fn part1(graph: &HashMap<String, HashSet<String>>) -> u64 {
     let start_node: &str = "start";
     let end_node: &str = "end";
-    let mut temp_paths: Vec<Vec<&str>> = Vec::new();
     let mut final_paths: Vec<Vec<&str>> = Vec::new();
-    for child in &graph[start_node] {
-        temp_paths.push(vec![start_node, &child]);
-    }
 
-    while temp_paths.len() > 0 {
-        let path = temp_paths.pop().unwrap();
+    let mut stack: Vec<(Vec<&str>, HashSet<&str>)> = Vec::new();
+    stack.push((vec![start_node], HashSet::new()));
+    while stack.len() > 0 {
+        let (path, seen) = stack.pop().unwrap();
         let last_node: &str = *path.last().unwrap();
         for child in &graph[last_node] {
             if child == start_node {
                 continue;
             }
 
-            let mut new_path = path.clone();
-            new_path.push(child);
             if child == end_node {
+                let mut new_path = path.clone();
+                new_path.push(child);
                 final_paths.push(new_path);
             } else {
-                let small_caves_counts = new_path
-                    .iter()
-                    .skip(1)
-                    .filter(|&s| s.chars().all(|c| c.is_ascii_lowercase()))
-                    .collect::<Counter<_>>();
-                if small_caves_counts.iter().all(|(_k, v)| *v <= 1) {
-                    temp_paths.push(new_path);
+                let is_small_cave = child.chars().all(|c| c.is_ascii_lowercase());
+
+                if is_small_cave {
+                    if !seen.contains(child as &str) {
+                        let mut new_path = path.clone();
+                        new_path.push(child);
+                        let mut new_seen = seen.clone();
+                        new_seen.insert(&child);
+                        stack.push((new_path, new_seen))
+                    }
+                } else {
+                    let mut new_path = path.clone();
+                    new_path.push(child);
+                    stack.push((new_path, seen.clone()))
                 }
             }
         }
