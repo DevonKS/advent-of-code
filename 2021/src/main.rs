@@ -16,7 +16,11 @@ mod day11;
 mod day12;
 
 use std::collections::HashMap;
-use std::collections::HashSet;
+
+const DAYS: [&str; 25] = [
+    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17",
+    "18", "19", "20", "21", "22", "23", "24", "25",
+];
 
 fn main() {
     let mut day_to_fn: HashMap<String, fn(utils::InputType) -> ()> = HashMap::new();
@@ -40,7 +44,6 @@ fn main() {
                 .takes_value(true)
                 .short("d")
                 .long("day")
-                .required(true)
                 .validator(validate_day),
         )
         .arg(
@@ -51,39 +54,34 @@ fn main() {
         )
         .get_matches();
 
-    let day_runner = day_to_fn.get(args.value_of("day").unwrap()).unwrap();
     let it = if args.is_present("example") {
         utils::InputType::Example
     } else {
         utils::InputType::Main
     };
-    day_runner(it);
+
+    if args.is_present("day") {
+        let day_runner = day_to_fn.get(args.value_of("day").unwrap()).unwrap();
+        day_runner(it);
+    } else {
+        for day in DAYS {
+            if day_to_fn.contains_key(day) {
+                println!("Day {}:", day);
+                let day_runner = day_to_fn.get(day).unwrap();
+                day_runner(it);
+                println!("-----------");
+            }
+        }
+    }
 }
 
 fn validate_day(val: String) -> Result<(), String> {
-    // FIXME it would be nice if I didn't have to redefine the valid days here
-    let mut valid_days = HashSet::new();
-    valid_days.insert("1");
-    valid_days.insert("2");
-    valid_days.insert("3");
-    valid_days.insert("4");
-    valid_days.insert("5");
-    valid_days.insert("6");
-    valid_days.insert("7");
-    valid_days.insert("8");
-    valid_days.insert("9");
-    valid_days.insert("10");
-    valid_days.insert("11");
-    valid_days.insert("12");
-
-    if valid_days.contains(&val as &str) {
+    if DAYS.contains(&val.as_ref()) {
         Ok(())
     } else {
         let mut e = String::new();
         e.push_str("Invalid day. valid values are: ");
-        let mut v = valid_days.into_iter().collect::<Vec<&str>>();
-        v.sort();
-        e.push_str(&v.join(" "));
+        e.push_str(&DAYS.join(" "));
         Err(e)
     }
 }

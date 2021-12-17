@@ -3,7 +3,6 @@ use std::io::{self, BufRead};
 
 pub fn parse_file<T>(d: Day, it: InputType, f: fn(&str) -> T) -> Vec<T> {
     let filename = filename_from_day_and_input_type(d, it);
-    println!("{}", filename);
     let file = File::open(filename).unwrap();
     let lines = io::BufReader::new(file).lines();
     let mut res: Vec<T> = Vec::new();
@@ -88,6 +87,7 @@ impl Day {
     }
 }
 
+#[derive(Copy, Clone)]
 pub enum InputType {
     Main,
     Example,
