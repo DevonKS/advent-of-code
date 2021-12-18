@@ -15,6 +15,7 @@ mod day10;
 mod day11;
 mod day12;
 mod day13;
+mod day14;
 
 use std::collections::HashMap;
 
@@ -38,6 +39,7 @@ fn main() {
     day_to_fn.insert("11".to_string(), day11::run);
     day_to_fn.insert("12".to_string(), day12::run);
     day_to_fn.insert("13".to_string(), day13::run);
+    day_to_fn.insert("14".to_string(), day14::run);
 
     let args = clap::App::new("Advent of Code 2021")
         .arg(
