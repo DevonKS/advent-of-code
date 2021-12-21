@@ -29,43 +29,25 @@ fn part1(cave: &Vec<Vec<u8>>) -> u64 {
 }
 
 fn build_entire_cave(cave: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
-    let mut new_cave: Vec<Vec<u8>> = Vec::new();
-    for row in cave {
-        let mut new_row: Vec<u8> = Vec::new();
-        for i in 0..5 {
-            let mut temp_row: Vec<u8> = row
-                .iter()
-                .map(|x| {
-                    let new_x = x + i;
-                    if new_x > 9 {
-                        new_x.rem_euclid(9)
-                    } else {
-                        new_x
+    let max_r = u32::try_from(cave.len()).unwrap();
+    let max_c = u32::try_from(cave[0].len()).unwrap();
+    let num_tiles = 5;
+    let mut new_cave: Vec<Vec<u8>> =
+        std::iter::repeat(vec![0; (max_c * num_tiles).try_into().unwrap()])
+            .take((max_r * num_tiles).try_into().unwrap())
+            .collect();
+    for (r, row) in cave.iter().enumerate() {
+        for (c, item) in row.iter().enumerate() {
+            for new_r in 0..5 {
+                for new_c in 0..5 {
+                    let mut new_val = item + new_r + new_c;
+                    while new_val > 9 {
+                        new_val -= 9;
                     }
-                })
-                .collect();
-            new_row.append(&mut temp_row);
-        }
-        new_cave.push(new_row);
-    }
-    for i in 1..5 {
-        for row in cave {
-            let mut new_row: Vec<u8> = Vec::new();
-            for j in 0..5 {
-                let mut temp_row: Vec<u8> = row
-                    .iter()
-                    .map(|x| {
-                        let new_x = x + i + j;
-                        if new_x > 9 {
-                            new_x.rem_euclid(9)
-                        } else {
-                            new_x
-                        }
-                    })
-                    .collect();
-                new_row.append(&mut temp_row);
+                    new_cave[r + (new_r as usize * usize::try_from(max_r).unwrap())]
+                        [c + (new_c as usize * usize::try_from(max_c).unwrap())] = new_val;
+                }
             }
-            new_cave.push(new_row);
         }
     }
     new_cave
