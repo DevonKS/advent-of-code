@@ -121,6 +121,7 @@ fn reduce_snailfish_number(num: &BinaryTree<u8>) -> BinaryTree<u8> {
     new_num
 }
 
+#[allow(dead_code)]
 fn explode_snailfish_number(num: &BinaryTree<u8>) -> (BinaryTree<u8>, bool) {
     let mut new_num = num.clone();
     let changed = _explode_snailfish_number(&mut new_num, 0, 0);
@@ -268,6 +269,7 @@ fn set_next_value_to_left<T>(
     }
 }
 
+#[allow(dead_code)]
 fn split_snailfish_number(num: &BinaryTree<u8>) -> (BinaryTree<u8>, bool) {
     let mut new_num = num.clone();
     let changed = _split_snailfish_number(&mut new_num, 0);
@@ -310,6 +312,7 @@ fn parse_str_to_u8(s: &str) -> u8 {
     s.parse::<u8>().unwrap()
 }
 
+#[allow(dead_code)]
 fn u8_to_str(u: &u8) -> String {
     format!("{}", u)
 }
@@ -318,6 +321,7 @@ fn combine_u8(a: &u8, b: &u8) -> u8 {
     a + b
 }
 
+#[allow(dead_code)]
 fn read_string(s: &str) -> Vec<BinaryTree<u8>> {
     let mut nums = Vec::new();
     for l in s.lines() {
@@ -333,6 +337,7 @@ fn read_input(it: utils::InputType) -> Vec<BinaryTree<u8>> {
     })
 }
 
+#[allow(dead_code)]
 fn binary_tree_to_string<T>(tree: &BinaryTree<T>, string_value: &dyn Fn(&T) -> String) -> String {
     _binary_tree_to_string(0, tree, string_value)
 }
