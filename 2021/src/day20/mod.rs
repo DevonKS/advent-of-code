@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use rustc_hash::FxHashMap;
 
 use crate::{time, utils};
 
@@ -72,7 +72,7 @@ fn read_input(it: utils::InputType) -> (Vec<bool>, Image) {
 
 #[derive(Clone, Debug)]
 struct Image {
-    points: HashMap<(isize, isize), bool>,
+    points: FxHashMap<(isize, isize), bool>,
     min_r: isize,
     max_r: isize,
     min_c: isize,
@@ -83,7 +83,7 @@ struct Image {
 impl Image {
     fn new() -> Image {
         Image {
-            points: HashMap::new(),
+            points: FxHashMap::default(),
             min_r: 0,
             max_r: 0,
             min_c: 0,
