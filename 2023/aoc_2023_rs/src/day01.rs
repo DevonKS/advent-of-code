@@ -3,84 +3,72 @@ use std::collections::HashMap;
 use crate::time;
 use crate::util;
 
+use aho_corasick::AhoCorasick;
+
 pub fn run(it: util::InputType) {
     let nums = read_input(it);
     time!("Part 1", println!("{}", part1(&nums)));
     time!("Part 2", println!("{}", part2(&nums)));
 }
 
-fn part2(lines: &[String]) -> usize {
-    let mut written_nums: HashMap<String, char> = HashMap::new();
-    written_nums.insert("one".to_string(), '1');
-    written_nums.insert("two".to_string(), '2');
-    written_nums.insert("three".to_string(), '3');
-    written_nums.insert("four".to_string(), '4');
-    written_nums.insert("five".to_string(), '5');
-    written_nums.insert("six".to_string(), '6');
-    written_nums.insert("seven".to_string(), '7');
-    written_nums.insert("eight".to_string(), '8');
-    written_nums.insert("nine".to_string(), '9');
-
-    lines
-        .iter()
-        .map(|s| {
-            let mut current_match = String::new();
-            let mut digits = Vec::new();
-            for c in s.chars() {
-                if c.is_ascii_digit() {
-                    digits.push(c);
-                    current_match.clear();
-                } else {
-                    current_match.push(c);
-                    if let Some(n) = written_nums.get(&current_match) {
-                        digits.push(*n);
-                        current_match.clear();
-                        current_match.push(c);
-                    } else {
-                        let mut is_prefix = false;
-                        for (k, _) in written_nums.iter() {
-                            if k.starts_with(&current_match) {
-                                is_prefix = true;
-                                break;
-                            }
-                        }
-
-                        if !is_prefix {
-                            current_match.clear();
-                            current_match.push(c);
-                        }
-                    }
-                }
-            }
-
-            if digits.is_empty() {
-                0
-            } else {
-                [digits[0], *digits.last().unwrap()]
-                    .iter()
-                    .collect::<String>()
-                    .parse::<usize>()
-                    .unwrap()
-            }
-        })
-        .sum()
-
-    // FIXME: 53914 is too high
-}
-
 fn part1(lines: &[String]) -> usize {
     lines
         .iter()
         .map(|s| {
-            let digits: Vec<char> = s.chars().filter(|s| s.is_ascii_digit()).collect();
+            let digits: Vec<usize> = s
+                .chars()
+                .filter(|s| s.is_ascii_digit())
+                .map(|c| c.to_digit(10).unwrap() as usize)
+                .collect();
             if digits.is_empty() {
                 0
             } else {
-                [digits[0], *digits.last().unwrap()]
-                    .iter()
-                    .collect::<String>()
-                    .parse::<usize>()
-                    .unwrap()
+                (digits[0] * 10) + *digits.last().unwrap()
+            }
+        })
+        .sum()
+}
+
+fn part2(lines: &[String]) -> usize {
+    let patterns = [
+        "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "1", "2", "3", "4",
+        "5", "6", "7", "8", "9",
+    ];
+
+    let ac_graph = AhoCorasick::new(patterns).unwrap();
+
+    let mut pattern_id_to_digit: HashMap<usize, usize> = HashMap::new();
+    pattern_id_to_digit.insert(0, 1);
+    pattern_id_to_digit.insert(1, 2);
+    pattern_id_to_digit.insert(2, 3);
+    pattern_id_to_digit.insert(3, 4);
+    pattern_id_to_digit.insert(4, 5);
+    pattern_id_to_digit.insert(5, 6);
+    pattern_id_to_digit.insert(6, 7);
+    pattern_id_to_digit.insert(7, 8);
+    pattern_id_to_digit.insert(8, 9);
+    pattern_id_to_digit.insert(9, 1);
+    pattern_id_to_digit.insert(10, 2);
+    pattern_id_to_digit.insert(11, 3);
+    pattern_id_to_digit.insert(12, 4);
+    pattern_id_to_digit.insert(13, 5);
+    pattern_id_to_digit.insert(14, 6);
+    pattern_id_to_digit.insert(15, 7);
+    pattern_id_to_digit.insert(16, 8);
+    pattern_id_to_digit.insert(17, 9);
+
+    lines
+        .iter()
+        .map(|s| {
+            let mut digits = vec![];
+            for mat in ac_graph.find_overlapping_iter(s) {
+                digits.push(pattern_id_to_digit.get(&mat.pattern().as_usize()).unwrap());
+            }
+
+            if digits.is_empty() {
+                0
+            } else {
+                (*digits[0] * 10) + *digits.last().unwrap()
             }
         })
         .sum()

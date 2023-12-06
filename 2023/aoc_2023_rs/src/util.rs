@@ -26,7 +26,7 @@ fn filename_from_day_and_input_type(d: Day, it: InputType) -> String {
     format!("resource/day-{}{}-input.txt", d, example_str)
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Hash, clap::ValueEnum)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[repr(u8)]
 pub enum Day {
     Day01,
@@ -89,6 +89,42 @@ impl fmt::Display for Day {
                 Day::Day25 => "25",
             }
         )
+    }
+}
+
+impl clap::ValueEnum for Day {
+    fn value_variants<'a>() -> &'a [Self] {
+        &DAYS
+    }
+
+    fn to_possible_value(&self) -> Option<clap::builder::PossibleValue> {
+        match self {
+            Day::Day01 => Some(clap::builder::PossibleValue::new("1")),
+            Day::Day02 => Some(clap::builder::PossibleValue::new("2")),
+            Day::Day03 => Some(clap::builder::PossibleValue::new("3")),
+            Day::Day04 => Some(clap::builder::PossibleValue::new("4")),
+            Day::Day05 => Some(clap::builder::PossibleValue::new("5")),
+            Day::Day06 => Some(clap::builder::PossibleValue::new("6")),
+            Day::Day07 => Some(clap::builder::PossibleValue::new("7")),
+            Day::Day08 => Some(clap::builder::PossibleValue::new("8")),
+            Day::Day09 => Some(clap::builder::PossibleValue::new("9")),
+            Day::Day10 => Some(clap::builder::PossibleValue::new("10")),
+            Day::Day11 => Some(clap::builder::PossibleValue::new("11")),
+            Day::Day12 => Some(clap::builder::PossibleValue::new("12")),
+            Day::Day13 => Some(clap::builder::PossibleValue::new("13")),
+            Day::Day14 => Some(clap::builder::PossibleValue::new("14")),
+            Day::Day15 => Some(clap::builder::PossibleValue::new("15")),
+            Day::Day16 => Some(clap::builder::PossibleValue::new("16")),
+            Day::Day17 => Some(clap::builder::PossibleValue::new("17")),
+            Day::Day18 => Some(clap::builder::PossibleValue::new("18")),
+            Day::Day19 => Some(clap::builder::PossibleValue::new("19")),
+            Day::Day20 => Some(clap::builder::PossibleValue::new("20")),
+            Day::Day21 => Some(clap::builder::PossibleValue::new("21")),
+            Day::Day22 => Some(clap::builder::PossibleValue::new("22")),
+            Day::Day23 => Some(clap::builder::PossibleValue::new("23")),
+            Day::Day24 => Some(clap::builder::PossibleValue::new("24")),
+            Day::Day25 => Some(clap::builder::PossibleValue::new("25")),
+        }
     }
 }
 
