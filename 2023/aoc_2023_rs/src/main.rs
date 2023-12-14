@@ -5,6 +5,7 @@ use clap::Parser;
 mod util;
 
 mod day01;
+mod day02;
 
 use std::collections::HashMap;
 
@@ -21,6 +22,7 @@ struct Args {
 fn main() {
     let mut day_to_fn: HashMap<util::Day, fn(util::InputType) -> ()> = HashMap::new();
     day_to_fn.insert(util::Day::Day01, day01::run);
+    day_to_fn.insert(util::Day::Day02, day02::run);
 
     let args = Args::parse();
 

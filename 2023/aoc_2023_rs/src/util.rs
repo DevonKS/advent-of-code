@@ -2,7 +2,7 @@ use core::fmt;
 use std::fs::{read_to_string, File};
 use std::io::{self, BufRead};
 
-pub fn parse_file<T>(d: Day, it: InputType, f: fn(&str) -> T) -> Vec<T> {
+pub fn parse_file<T>(d: Day, it: InputType, f: impl Fn(&str) -> T) -> Vec<T> {
     let filename = filename_from_day_and_input_type(d, it);
     let file = File::open(filename).unwrap();
     let lines = io::BufReader::new(file).lines();
