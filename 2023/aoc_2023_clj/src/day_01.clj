@@ -1,7 +1,6 @@
 (ns day-01
   (:require
    util
-   [clojure.string :as string]
    [aho.core :as aho]))
 
 (defn challenge-1
@@ -16,14 +15,9 @@
                   parsed-lines)]
     (reduce + nums)))
 
-(defn challenge-1!
-  [example]
-  (challenge-1 (util/parse-file 1 example identity)))
-
-(defn challenge-2!
-  [example]
-  (let [lines (util/parse-file 1 example identity)
-        match->num {:one 1
+(defn challenge-2
+  [lines]
+  (let [match->num {:one 1
                     :two 2
                     :three 3
                     :four 4
@@ -72,8 +66,9 @@
 
 (defn run
   [example]
-  (println "Part 1:")
-  (time (println (challenge-1! example)))
-  (println)
-  (println "Part 2:")
-  (time (println (challenge-2! example))))
+  (let [lines (util/parse-file 1 example identity)]
+    (println "Part 1:")
+    (time (println (challenge-1 lines)))
+    (println)
+    (println "Part 2:")
+    (time (println (challenge-2 lines)))))
