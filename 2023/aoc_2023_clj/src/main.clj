@@ -2,7 +2,8 @@
   (:require
    [clojure.set :as set]
    [clojure.spec.alpha :as s]
-   [day-01 :as d1]))
+   [day-01 :as d1]
+   [day-02 :as d2]))
 
 (def usage "Usage: aoc_2023_clj [OPTIONS]
 
@@ -16,7 +17,8 @@ Options:
 
 (defn- run-aoc
   [{:keys [main/day main/example]}]
-  (let [fns {1 d1/run}]
+  (let [fns {1 d1/run
+             2 d2/run}]
     (if-let [f (get fns day)]
       (f example)
       (doseq [[k v] fns]
