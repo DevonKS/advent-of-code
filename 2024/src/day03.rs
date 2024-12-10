@@ -1,5 +1,3 @@
-use std::usize;
-
 use regex::Regex;
 
 use crate::{time, util};
