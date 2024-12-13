@@ -11,6 +11,7 @@ mod day04;
 mod day05;
 mod day06;
 mod day07;
+mod day08;
 
 use std::collections::HashMap;
 
@@ -33,6 +34,7 @@ fn main() {
     day_to_fn.insert(util::Day::Day05, day05::run);
     day_to_fn.insert(util::Day::Day06, day06::run);
     day_to_fn.insert(util::Day::Day07, day07::run);
+    day_to_fn.insert(util::Day::Day08, day08::run);
 
     let args = Args::parse();
 
